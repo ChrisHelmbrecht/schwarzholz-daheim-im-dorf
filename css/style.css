@@ -180,3 +180,17 @@ footer a { color: #fff; text-decoration: none; margin-left: 18px; }
     justify-content: center; align-items: center; gap: 10px; height: 60px; font-size: 1.05rem;
   }
 }
+
+/* Form */
+.form { background: #fff; color: var(--ink); padding: 32px; border-top: 4px solid var(--sun); }
+.form h3 { color: var(--g); margin-bottom: 16px; }
+.form label { display: block; font-weight: 500; font-size: .95rem; margin-bottom: 14px; color: var(--g); }
+.form input[type=text], .form input[type=tel], .form input[type=email], .form textarea {
+  display: block; width: 100%; margin-top: 6px; padding: 12px 14px; font: inherit; font-weight: 300;
+  border: 2px solid var(--line); background: #fff; color: var(--ink);
+}
+.form input:focus, .form textarea:focus { outline: none; border-color: var(--g); }
+.form .consent { display: flex; gap: 10px; align-items: flex-start; font-weight: 300; font-size: .85rem; color: var(--grey); margin: 6px 0 18px; }
+.form .consent input { width: 20px; height: 20px; margin-top: 2px; flex: 0 0 20px; }
+.form .consent a { color: var(--g); }
+.form .btn { width: 100%; justify-content: center; }
