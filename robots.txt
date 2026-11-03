@@ -2,5 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /kontakt.php
 Disallow: /danke.html
+Disallow: /admin/
+Disallow: /inc/
+Disallow: /data/
 
 Sitemap: https://daheim.feriendorfschwarzholz.de/sitemap.xml
