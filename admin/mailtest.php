@@ -37,8 +37,12 @@ dl{display:grid;grid-template-columns:140px 1fr;gap:6px 12px;margin:16px 0}dt{fo
   <dt>Konfiguration</dt><dd><?= $h($cfg['_file']) ?></dd>
  </dl>
 <?php else: ?>
- <p class="err">Keine SMTP-Zugangsdaten gefunden. Es wird PHP mail() verwendet (unzuverlässig).<br>
- Lege die Datei <code><?= $h(dirname(__DIR__, 2) . '/private/daheim-smtp.php') ?></code> an (Vorlage: inc/smtp.example.php).</p>
+ <dl>
+  <dt>Methode</dt><dd>Plesk-Mailserver (PHP mail())</dd>
+  <dt>Absender</dt><dd><?= $h(LEAD_MAIL_FROM) ?></dd>
+  <dt>Empfänger</dt><dd><?= $h(LEAD_MAIL_TO) ?></dd>
+ </dl>
+ <p class="note">„Versendet“ heißt hier nur: Plesk hat die Mail angenommen. Ob sie ankommt, zeigt der Posteingang.</p>
 <?php endif; ?>
 <form method="post"><button class="btn" type="submit">Testmail an <?= $h($cfg['to'] ?? LEAD_MAIL_TO) ?> senden</button></form>
 <?php if ($result !== null): ?>
