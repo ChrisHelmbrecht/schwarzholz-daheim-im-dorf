@@ -3,7 +3,7 @@
 date_default_timezone_set('Europe/Berlin');
 
 const LEAD_MAIL_TO   = 'info@feriendorf-schwarzholz.de';
-const LEAD_MAIL_FROM = 'noreply@feriendorfschwarzholz.de'; // nur für den Notfall-Versand ohne SMTP
+const LEAD_MAIL_FROM = 'info@dieneue.social'; // Konto des externen Mailservers in Plesk – Absender muss dazu passen
 const LEAD_SUBJECT   = 'Daheim im Dorf – Anfrage über die Website';
 
 /**
