@@ -17,9 +17,6 @@ if ($name === '' || !filter_var($mail, FILTER_VALIDATE_EMAIL) || empty($_POST['D
     header('Location: index.html?fehler=1#kontakt'); exit;
 }
 
-// Header-Injection verhindern
-$name_hdr = preg_replace('/[\r\n"<>]+/', ' ', $name);
-
 $datum = date('d.m.Y H:i');
 $body  = "Neue Anfrage über daheim.feriendorfschwarzholz.de\n\n";
 $body .= "Name:      $name\n";
@@ -28,29 +25,24 @@ $body .= "E-Mail:    $mail\n\n";
 $body .= "Nachricht:\n$msg\n\n";
 $body .= "Datenschutz: zugestimmt\nGesendet: $datum\n";
 
-$headers  = "From: Daheim im Dorf <" . LEAD_MAIL_FROM . ">\r\n";
-$headers .= "Reply-To: $name_hdr <$mail>\r\n";
-$headers .= "MIME-Version: 1.0\r\n";
-$headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-$headers .= "Content-Transfer-Encoding: 8bit\r\n";
+// Sicherheitsnetz: Bricht PHP während des Versands ab (z. B. Zeitüberschreitung),
+// wird die Anfrage trotzdem gespeichert.
+$logged = false;
+register_shutdown_function(function () use (&$logged, $datum, $name, $tel, $mail, $msg) {
+    if (!$logged) { lead_append([$datum, $name, $tel, $mail, $msg, 'NEIN – Abbruch beim Versand']); }
+});
 
-$sent = @mail(
-    LEAD_MAIL_TO,
-    '=?UTF-8?B?' . base64_encode(LEAD_SUBJECT) . '?=',
-    $body,
-    $headers,
-    '-f' . LEAD_MAIL_FROM
-);
+[$sent, $err] = send_mail(LEAD_SUBJECT, $body, $name, $mail);
 
 // Erst nach dem Versuch protokollieren, damit der Versandstatus mitgeschrieben wird.
 // Schlägt der Versand fehl, ist die Anfrage trotzdem im Log.
-$logged = lead_append([$datum, $name, $tel, $mail, $msg, $sent ? 'ja' : 'NEIN']);
+$logged = lead_append([$datum, $name, $tel, $mail, $msg, $sent ? 'ja' : 'NEIN – ' . $err]);
 
 if (!$logged) {
     error_log('Daheim im Dorf: Lead konnte nicht gespeichert werden (' . lead_file() . ')');
 }
 if (!$sent) {
-    error_log('Daheim im Dorf: mail() fehlgeschlagen für Anfrage von ' . $mail);
+    error_log('Daheim im Dorf: Mailversand fehlgeschlagen (' . $err . ') für Anfrage von ' . $mail);
 }
 
 header('Location: ' . $danke);

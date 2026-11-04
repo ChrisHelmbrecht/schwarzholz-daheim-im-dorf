@@ -3,14 +3,7 @@
 // (Websites & Domains → Passwortgeschützte Verzeichnisse → /admin).
 require dirname(__DIR__) . '/inc/config.php';
 
-$user = $_SERVER['REMOTE_USER'] ?? $_SERVER['REDIRECT_REMOTE_USER'] ?? $_SERVER['PHP_AUTH_USER'] ?? '';
-if ($user === '') {
-    http_response_code(403);
-    header('Content-Type: text/plain; charset=UTF-8');
-    echo "Zugriff gesperrt.\n\nDieses Verzeichnis ist noch nicht passwortgeschützt.\n"
-       . "Bitte in Plesk unter „Passwortgeschützte Verzeichnisse“ den Ordner /admin schützen.";
-    exit;
-}
+require_admin();
 
 $rows = array_reverse(lead_read()); // neueste zuerst
 
@@ -58,7 +51,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
  <?php if ($byMonth): ?>
  <p class="note">Pro Monat: <?php foreach ($byMonth as $m => $n) echo $h($m) . ': <strong>' . $n . '</strong> &nbsp; '; ?></p>
  <?php endif; ?>
- <p><a class="btn outline" href="?csv=1">Als CSV herunterladen (Excel)</a></p>
+ <p><a class="btn outline" href="?csv=1">Als CSV herunterladen (Excel)</a> &nbsp; <a class="btn outline" href="mailtest.php">Mailversand testen</a></p>
  <?php if (!$rows): ?>
   <p>Noch keine Anfragen.</p>
  <?php else: ?>
@@ -71,7 +64,7 @@ $h = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
    <td><?= $h(ltrim($r[2], "'")) ?></td>
    <td><a href="mailto:<?= $h($r[3]) ?>"><?= $h($r[3]) ?></a></td>
    <td class="msg"><?= $h(ltrim($r[4], "'")) ?></td>
-   <td class="<?= $r[5] === 'ja' ? '' : 'no' ?>"><?= $h($r[5]) ?></td>
+   <td class="<?= $r[5] === 'ja' ? '' : 'no' ?>"><?= $h($r[5] === 'ja' ? 'ja' : $r[5]) ?></td>
   </tr>
   <?php endforeach; ?>
  </table></div>
